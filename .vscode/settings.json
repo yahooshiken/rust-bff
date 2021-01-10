@@ -1,0 +1,9 @@
+{
+  "files.associations": {
+    ".stylelintrc": "json",
+    "*.tsx": "typescriptreact",
+    "cstddef": "c",
+    "string.h": "c",
+    "node.h": "c"
+  }
+}
