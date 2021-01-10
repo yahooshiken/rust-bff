@@ -1,6 +1,6 @@
 {
 	"functions": {
-		"**/*.rs": {
+		"api/**/*.rs": {
 			"runtime": "now-rust@2.0.0"
 		}
 	}
