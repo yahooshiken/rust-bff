@@ -1,11 +1,10 @@
 use actix_web::{
     client::{Client, Connector},
-    get, post, web, App, HttpResponse, HttpServer, Responder,
+    get, App, HttpResponse, HttpServer, Responder,
 };
 use dotenv::dotenv;
 use openssl::ssl::{SslConnector, SslMethod};
 use serde::{Deserialize, Serialize};
-use serde_json::Value;
 use std::env;
 
 #[derive(Debug, Serialize, Deserialize)]
