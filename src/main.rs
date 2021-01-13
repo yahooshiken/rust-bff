@@ -57,8 +57,10 @@ async fn get_activities_from_github() -> impl Responder {
 async fn main() -> std::io::Result<()> {
     dotenv().ok();
 
+    let port = env::var("PORT").expect("PORT is not defined.");
+
     return HttpServer::new(|| App::new().service(get_activities_from_github))
-        .bind("0.0.0.0:8080")?
+        .bind(format!("0.0.0.0:{}", port))?
         .run()
         .await;
 }
