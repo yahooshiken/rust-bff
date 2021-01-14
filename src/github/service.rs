@@ -23,5 +23,7 @@ pub async fn get_activities_from_github() -> impl Responder {
     let body_str = String::from_utf8(body.to_vec()).unwrap();
     let events: Vec<GitHubEvent> = serde_json::from_str(&body_str).unwrap();
 
-    return HttpResponse::Ok().json(events);
+    return HttpResponse::Ok()
+        .content_type("application/json; charset=utf-8")
+        .json(events);
 }

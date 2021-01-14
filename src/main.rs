@@ -1,4 +1,5 @@
 mod github;
+mod note;
 mod twitter;
 
 use actix_cors::Cors;
@@ -7,6 +8,7 @@ use dotenv::dotenv;
 use std::env;
 
 use github::get_activities_from_github;
+use note::get_activities_from_note;
 use twitter::get_activities_from_twitter;
 
 #[actix_web::main]
@@ -25,6 +27,7 @@ async fn main() -> std::io::Result<()> {
             .wrap(cors)
             .service(get_activities_from_twitter)
             .service(get_activities_from_github)
+            .service(get_activities_from_note)
     })
     .bind(format!("0.0.0.0:{}", port))?
     .run()
