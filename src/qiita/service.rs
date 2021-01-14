@@ -1,22 +1,14 @@
 use super::Value;
-use actix_web::{
-    client::{Client, Connector},
-    get, HttpResponse, Responder,
-};
-use openssl::ssl::{SslConnector, SslMethod};
+use actix_web::{get, HttpResponse, Responder};
 use std::env;
+
+use crate::util::http_client::create_http_client;
 
 #[get("/v1/activities/qiita")]
 pub async fn get_activities_from_qiita() -> impl Responder {
     let url = "https://qiita.com/api/v2/authenticated_user/items?page=1&per_page=20";
     let token = env::var("QIITA_BEARER_TOKEN").expect("VAR is not defined");
-
-    let builder = SslConnector::builder(SslMethod::tls()).unwrap();
-    let client = Client::builder()
-        .header("User-Agent", "localhost")
-        .header("Authorization", format!("Bearer {}", token))
-        .connector(Connector::new().ssl(builder.build()).finish())
-        .finish();
+    let client = create_http_client(token);
 
     let response = client.get(url).send().await;
     let body = response.unwrap().body().await.unwrap();

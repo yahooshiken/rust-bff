@@ -2,6 +2,9 @@ mod github;
 mod note;
 mod qiita;
 mod twitter;
+mod util {
+    pub mod http_client;
+}
 
 use actix_cors::Cors;
 use actix_web::{App, HttpServer};

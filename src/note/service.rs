@@ -1,18 +1,11 @@
 use super::Value;
-use actix_web::{
-    client::{Client, Connector},
-    get, HttpResponse, Responder,
-};
-use openssl::ssl::{SslConnector, SslMethod};
+use crate::util::http_client::create_http_client;
+use actix_web::{get, HttpResponse, Responder};
 
 #[get("/v1/activities/note")]
 pub async fn get_activities_from_note() -> impl Responder {
     let url = "https://note.com/api/v2/creators/yahooshiken/contents?kind=note&page=1";
-    let builder = SslConnector::builder(SslMethod::tls()).unwrap();
-    let client = Client::builder()
-        .header("User-Agent", "localhost")
-        .connector(Connector::new().ssl(builder.build()).finish())
-        .finish();
+    let client = create_http_client("".to_string());
 
     let response = client.get(url).send().await;
     let body = response.unwrap().body().await.unwrap();
