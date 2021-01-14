@@ -1,5 +1,6 @@
 mod github;
 mod note;
+mod qiita;
 mod twitter;
 
 use actix_cors::Cors;
@@ -9,6 +10,7 @@ use std::env;
 
 use github::get_activities_from_github;
 use note::get_activities_from_note;
+use qiita::get_activities_from_qiita;
 use twitter::get_activities_from_twitter;
 
 #[actix_web::main]
@@ -25,9 +27,10 @@ async fn main() -> std::io::Result<()> {
 
         App::new()
             .wrap(cors)
-            .service(get_activities_from_twitter)
             .service(get_activities_from_github)
             .service(get_activities_from_note)
+            .service(get_activities_from_qiita)
+            .service(get_activities_from_twitter)
     })
     .bind(format!("0.0.0.0:{}", port))?
     .run()
