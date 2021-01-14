@@ -1,5 +1,8 @@
-use super::{Value};
-use actix_web::{client::{Client,Connector},get, Responder, HttpResponse};
+use super::Value;
+use actix_web::{
+    client::{Client, Connector},
+    get, HttpResponse, Responder,
+};
 use openssl::ssl::{SslConnector, SslMethod};
 use std::env;
 
@@ -22,4 +25,3 @@ pub async fn get_activities_from_twitter() -> impl Responder {
 
     return HttpResponse::Ok().body(events);
 }
-

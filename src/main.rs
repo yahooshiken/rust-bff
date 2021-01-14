@@ -6,9 +6,8 @@ use actix_web::{App, HttpServer};
 use dotenv::dotenv;
 use std::env;
 
-use github::{get_activities_from_github};
-use twitter::{get_activities_from_twitter};
-
+use github::get_activities_from_github;
+use twitter::get_activities_from_twitter;
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {

@@ -1,5 +1,8 @@
-use super::{GitHubEvent};
-use actix_web::{client::{Client,Connector},get, Responder, HttpResponse};
+use super::GitHubEvent;
+use actix_web::{
+    client::{Client, Connector},
+    get, HttpResponse, Responder,
+};
 use openssl::ssl::{SslConnector, SslMethod};
 use std::env;
 
