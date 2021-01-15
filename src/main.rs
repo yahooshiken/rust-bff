@@ -20,12 +20,12 @@ use twitter::get_activities_from_twitter;
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
     dotenv().ok();
-
     let port = env::var("PORT").expect("PORT is not defined.");
 
     return HttpServer::new(|| {
+        let allowed_origin = env::var("ALLOWED_ORIGIN").expect("ALLOWED_ORIGIN is not defined.");
         let cors = Cors::default()
-            .allowed_origin("http://localhost:8000")
+            .allowed_origin(&allowed_origin)
             .allowed_methods(vec!["GET"])
             .max_age(3600);
 
