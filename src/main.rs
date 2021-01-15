@@ -4,6 +4,7 @@ mod qiita;
 mod twitter;
 mod util {
     pub mod http_client;
+    pub mod model;
 }
 
 use actix_cors::Cors;
