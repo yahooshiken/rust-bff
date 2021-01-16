@@ -31,6 +31,7 @@ pub struct Content {
     pub publishAt: Option<String>,
     pub body: Option<String>,
     pub hashtags: Vec<HashTag>,
+    pub noteUrl: Option<String>,
 }
 #[derive(Debug, Serialize, Deserialize)]
 #[allow(non_snake_case)]
