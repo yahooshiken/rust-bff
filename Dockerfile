@@ -3,13 +3,9 @@ FROM rust:1.49 as builder
 RUN USER=root cargo new --bin rust-bff
 WORKDIR ./rust-bff
 COPY ./Cargo.toml ./Cargo.toml
-RUN cargo build --release
-RUN rm src/*.rs
 
 ADD . ./
-
 RUN cargo build --release
-RUN ls -l ./target/release
 
 FROM debian:buster-slim
 ARG APP=/usr/src/app
