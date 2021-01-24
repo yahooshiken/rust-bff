@@ -1,5 +1,6 @@
 use crate::{note::NoteResponse, qiita::QiitaResponse};
 
+use roxmltree::Node;
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -8,6 +9,7 @@ pub enum ServiceName {
     Note,
     Github,
     Twitter,
+    Hatena,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -84,6 +86,71 @@ impl ArticleResponse {
                     display_name: None,
                     avatar_url: v.user.profile_image_url,
                 },
+            })
+            .collect();
+
+        ArticleResponse { articles }
+    }
+
+    pub fn from_hatena(hatena_response: Vec<Node>) -> Self {
+        let articles = hatena_response
+            .into_iter()
+            .map(|n| {
+                let id = n
+                    .descendants()
+                    .find(|x| x.tag_name().name() == "id")
+                    .unwrap()
+                    .text();
+                let title = n
+                    .descendants()
+                    .find(|x| x.tag_name().name() == "title")
+                    .unwrap()
+                    .text();
+
+                let created_at = n
+                    .descendants()
+                    .find(|x| x.tag_name().name() == "published")
+                    .unwrap()
+                    .text();
+
+                let body = n
+                    .descendants()
+                    .find(|x| x.tag_name().name() == "summary")
+                    .unwrap()
+                    .text();
+
+                let url = n
+                    .descendants()
+                    .find(|x| x.attribute("rel").unwrap_or_default() == "alternate")
+                    .unwrap()
+                    .attribute("href")
+                    .unwrap();
+
+                let author = n
+                    .descendants()
+                    .find(|x| x.tag_name().name() == "author")
+                    .unwrap()
+                    .descendants()
+                    .find(|x| x.tag_name().name() == "name")
+                    .unwrap()
+                    .text();
+
+                Article {
+                    service_name: ServiceName::Hatena,
+                    id: id.unwrap_or("").to_string(),
+                    title: title.map(|s| s.to_string()),
+                    created_at: created_at.map(|s| s.to_string()),
+                    body: body.map(|s| s.to_string()),
+                    url: Some(url.to_string()),
+                    image_url: None,
+                    tags: vec![],
+                    user: User {
+                        id: 1,
+                        display_name: author.map(|s| s.to_string()),
+                        user_name: author.map(|s| s.to_string()),
+                        avatar_url: None,
+                    },
+                }
             })
             .collect();
 

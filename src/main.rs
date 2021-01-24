@@ -1,4 +1,5 @@
 mod github;
+mod hatena;
 mod note;
 mod qiita;
 mod twitter;
@@ -13,6 +14,7 @@ use dotenv::dotenv;
 use std::env;
 
 use github::get_activities_from_github;
+use hatena::get_activities_from_hatena;
 use note::get_activities_from_note;
 use qiita::get_activities_from_qiita;
 use twitter::get_activities_from_twitter;
@@ -35,6 +37,7 @@ async fn main() -> std::io::Result<()> {
             .service(get_activities_from_note)
             .service(get_activities_from_qiita)
             .service(get_activities_from_twitter)
+            .service(get_activities_from_hatena)
     })
     .bind(format!("0.0.0.0:{}", port))?
     .run()
