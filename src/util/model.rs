@@ -69,6 +69,8 @@ impl ArticleResponse {
     }
 
     pub fn from_qiita(qiita_response: Vec<QiitaResponse>) -> Self {
+        let default_image_url =
+            "https://cdn.qiita.com/assets/qiita-fb-41f9429f13a8c56f50dd0ab477c80d26.png";
         let articles = qiita_response
             .into_iter()
             .map(|v| Article {
@@ -78,7 +80,7 @@ impl ArticleResponse {
                 created_at: v.created_at,
                 body: v.body,
                 url: v.url,
-                image_url: None,
+                image_url: Some(default_image_url.to_string()),
                 tags: v.tags.into_iter().map(|tag| tag.name).collect(),
                 user: User {
                     id: v.user.permanent_id,
@@ -93,6 +95,7 @@ impl ArticleResponse {
     }
 
     pub fn from_hatena(hatena_response: Vec<Node>) -> Self {
+        let default_image_url = "https://cdn.blog.st-hatena.com/images/theme/og-image-1500.png";
         let articles = hatena_response
             .into_iter()
             .map(|n| {
@@ -142,7 +145,7 @@ impl ArticleResponse {
                     created_at: created_at.map(|s| s.to_string()),
                     body: body.map(|s| s.to_string()),
                     url: Some(url.to_string()),
-                    image_url: None,
+                    image_url: Some(default_image_url.to_string()),
                     tags: vec![],
                     user: User {
                         id: 1,
