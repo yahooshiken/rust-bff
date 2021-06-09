@@ -1,4 +1,4 @@
-use crate::{note::NoteResponse, qiita::QiitaResponse};
+use crate::{note::NoteResponse, qiita::QiitaResponse, zenn::ZennResponse};
 
 use roxmltree::Node;
 use serde::{Deserialize, Serialize};
@@ -10,6 +10,7 @@ pub enum ServiceName {
     Github,
     Twitter,
     Hatena,
+    Zenn,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -154,6 +155,39 @@ impl ArticleResponse {
                         avatar_url: None,
                     },
                 }
+            })
+            .collect();
+
+        ArticleResponse { articles }
+    }
+
+    pub fn from_zenn(zenn_response: ZennResponse) -> Self {
+        let default_image_url = "https://zenn.dev/images/og-large.png";
+        let articles = zenn_response
+            .articles
+            .into_iter()
+            .map(|article| Article {
+                service_name: ServiceName::Zenn,
+                id: article.id.to_string(),
+                title: article.title,
+                created_at: article.published_at,
+                image_url: Some(default_image_url.to_string()),
+                url: Some(format!(
+                    "https://zenn.dev/yahooshiken/articles/{}",
+                    article.slug
+                )),
+                body: Some("".to_string()),
+                user: User {
+                    id: article.user.id,
+                    user_name: article.user.username,
+                    display_name: article.user.name,
+                    avatar_url: article.user.avatar_small_url,
+                },
+                tags: article
+                    .topics
+                    .into_iter()
+                    .map(|topic| topic.display_name)
+                    .collect(),
             })
             .collect();
 

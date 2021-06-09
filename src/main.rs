@@ -3,6 +3,7 @@ mod hatena;
 mod note;
 mod qiita;
 mod twitter;
+mod zenn;
 mod util {
     pub mod http_client;
     pub mod model;
@@ -18,6 +19,7 @@ use hatena::get_activities_from_hatena;
 use note::get_activities_from_note;
 use qiita::get_activities_from_qiita;
 use twitter::get_activities_from_twitter;
+use zenn::get_activities_from_zenn;
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
@@ -38,6 +40,7 @@ async fn main() -> std::io::Result<()> {
             .service(get_activities_from_qiita)
             .service(get_activities_from_twitter)
             .service(get_activities_from_hatena)
+            .service(get_activities_from_zenn)
     })
     .bind(format!("0.0.0.0:{}", port))?
     .run()
