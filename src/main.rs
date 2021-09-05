@@ -19,7 +19,7 @@ use github::get_activities_from_github;
 use hatena::get_activities_from_hatena;
 use note::get_activities_from_note;
 use qiita::get_activities_from_qiita;
-use spotify::get_playlists;
+use spotify::{get_playlists, get_tracks};
 use twitter::get_activities_from_twitter;
 use zenn::get_activities_from_zenn;
 
@@ -44,6 +44,7 @@ async fn main() -> std::io::Result<()> {
             .service(get_activities_from_hatena)
             .service(get_activities_from_zenn)
             .service(get_playlists)
+            .service(get_tracks)
     })
     .bind(format!("0.0.0.0:{}", port))?
     .run()

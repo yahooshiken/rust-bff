@@ -1,7 +1,7 @@
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Serialize, Deserialize)]
-pub struct Tracks {
+pub struct PlaylistTracks {
     href: String,
     total: u64,
 }
@@ -28,7 +28,7 @@ pub struct Playlist {
     public: bool,
     owner: Owner,
     images: Vec<Image>,
-    tracks: Tracks,
+    tracks: PlaylistTracks,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -38,13 +38,13 @@ pub struct PlaylistResponse {
 }
 
 #[derive(Debug, Serialize, Deserialize)]
-pub struct Response {
+pub struct GetPlaylistResponse {
     playlists: Vec<Playlist>,
 }
 
-impl Response {
+impl GetPlaylistResponse {
     pub fn from_spotify_response(spotify_response: PlaylistResponse) -> Self {
-        Response {
+        GetPlaylistResponse {
             playlists: spotify_response.items,
         }
     }
@@ -61,4 +61,62 @@ pub struct GetTokenResponse {
     pub token_type: String,
     pub expires_in: u64,
     pub scope: Option<String>,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct Artist {
+    id: String,
+    name: String,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct Album {
+    id: String,
+    name: String,
+    album_type: String,
+    artists: Vec<Artist>,
+    images: Vec<Image>,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct Track {
+    id: String,
+    track_number: u64,
+    name: String,
+    href: String,
+    album: Album,
+    artists: Vec<Artist>,
+    disc_number: u64,
+    duration_ms: u64,
+    preview_url: String,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct TrackItem {
+    track: Track,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct TrackResponse {
+    href: String,
+    items: Vec<TrackItem>,
+    limit: u64,
+    total: u64,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct GetTracksResponse {
+    tracks: Vec<Track>,
+}
+
+impl GetTracksResponse {
+    pub fn from_spotify_response(spotify_response: TrackResponse) -> Self {
+        GetTracksResponse {
+            tracks: spotify_response
+                .items
+                .into_iter()
+                .map(|item| item.track)
+                .collect(),
+        }
+    }
 }
