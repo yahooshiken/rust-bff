@@ -83,12 +83,13 @@ pub struct Track {
     id: String,
     track_number: u64,
     name: String,
-    href: String,
+    href: Option<String>,
     album: Album,
     artists: Vec<Artist>,
     disc_number: u64,
     duration_ms: u64,
-    preview_url: String,
+    duration: Option<String>,
+    preview_url: Option<String>,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -111,12 +112,18 @@ pub struct GetTracksResponse {
 
 impl GetTracksResponse {
     pub fn from_spotify_response(spotify_response: TrackResponse) -> Self {
-        GetTracksResponse {
-            tracks: spotify_response
-                .items
-                .into_iter()
-                .map(|item| item.track)
-                .collect(),
+        let mut tracks: Vec<Track> = spotify_response
+            .items
+            .into_iter()
+            .map(|item| item.track)
+            .collect();
+
+        for t in tracks.iter_mut() {
+            let minutes = t.duration_ms / 1000 / 60;
+            let seconds = t.duration_ms / 1000 - (minutes * 60);
+            t.duration = Some(format!("{0}:{1: >02}", minutes, seconds));
         }
+
+        GetTracksResponse { tracks }
     }
 }
