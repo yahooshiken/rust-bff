@@ -67,7 +67,7 @@ pub async fn get_tracks(req: HttpRequest) -> impl Responder {
     let client = create_http_client(token);
 
     let response = client.get(url).send().await;
-    let body = response.unwrap().body().await.unwrap();
+    let body = response.unwrap().body().limit(usize::MAX).await.unwrap();
     let track_response: TrackResponse = serde_json::from_slice(&body).unwrap();
     let res: GetTracksResponse = GetTracksResponse::from_spotify_response(track_response);
     return HttpResponse::Ok().json(res);
