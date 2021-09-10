@@ -26,6 +26,8 @@ $ cargo run   # Or simply, $ cargo r
 $ heroku login
 $ heroku container:login # With Docker Desktop running
 
+$ docker build .
+
 $ heroku container:push web
 $ heroku container:release web
 ```
