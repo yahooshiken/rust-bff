@@ -175,19 +175,14 @@ impl ArticleResponse {
                 url: Some(format!(
                     "https://zenn.dev/yahooshiken/articles/{}",
                     article.slug
-                )),
-                body: Some("".to_string()),
+                )), body: Some("".to_string()),
                 user: User {
                     id: article.user.id,
                     user_name: article.user.username,
                     display_name: article.user.name,
                     avatar_url: article.user.avatar_small_url,
                 },
-                tags: article
-                    .topics
-                    .into_iter()
-                    .map(|topic| topic.display_name)
-                    .collect(),
+                tags: Vec::new(),
             })
             .collect();
 
