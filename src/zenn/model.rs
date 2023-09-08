@@ -13,7 +13,6 @@ pub struct Article {
   pub id: u64,
   pub slug: String,
   pub title: Option<String>,
-  pub published: bool,
   pub published_at: Option<String>,
   pub user: User,
 }
