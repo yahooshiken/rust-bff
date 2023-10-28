@@ -22,14 +22,6 @@ cargo run   # Or simply, $ cargo r
 
 ## Deploy
 
-```sh
-heroku login
-heroku container:login # With Docker Desktop running
-
-docker build .
-
-heroku container:push web
-heroku container:release web
-```
-
-Ref: [Container Registry & Runtime (Docker Deploys) | Heroku Dev Center](https://devcenter.heroku.com/articles/container-registry-and-runtime)
+I use [render](https://render.com/) for deployment.
+When a branch is merged into `master` branch, the deployment will start automatically.
+One single deployment typically takes from 10 to 15 minutes.
