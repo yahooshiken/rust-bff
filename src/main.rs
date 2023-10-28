@@ -8,6 +8,7 @@ mod zenn;
 mod util {
     pub mod http_client;
     pub mod model;
+    pub mod wake;
 }
 
 use actix_cors::Cors;
@@ -22,6 +23,7 @@ use qiita::get_activities_from_qiita;
 use spotify::{get_playlists, get_tracks};
 use twitter::get_activities_from_twitter;
 use zenn::get_activities_from_zenn;
+use util::wake::wake_up_server;
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
@@ -37,6 +39,7 @@ async fn main() -> std::io::Result<()> {
 
         App::new()
             .wrap(cors)
+            .service(wake_up_server)
             .service(get_activities_from_github)
             .service(get_activities_from_note)
             .service(get_activities_from_qiita)
