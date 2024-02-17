@@ -1,7 +1,8 @@
-use crate::{note::NoteResponse, qiita::QiitaResponse, zenn::ZennResponse};
+use crate::{note::NoteResponse, qiita::QiitaResponse, zenn::ZennResponse, sizu::SizuResponse};
 
 use roxmltree::Node;
 use serde::{Deserialize, Serialize};
+use html2text::from_read;
 
 #[derive(Debug, Serialize, Deserialize)]
 pub enum ServiceName {
@@ -11,6 +12,7 @@ pub enum ServiceName {
     Twitter,
     Hatena,
     Zenn,
+    Sizu,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -181,6 +183,34 @@ impl ArticleResponse {
                     user_name: article.user.username,
                     display_name: article.user.name,
                     avatar_url: article.user.avatar_small_url,
+                },
+                tags: Vec::new(),
+            })
+            .collect();
+
+        ArticleResponse { articles }
+    }
+
+    pub fn from_sizu(sizu_response: SizuResponse) -> Self {
+        let default_image_url = "	https://static.sizu.me/api/og-image/5112c30d21fe?avatarUrl=https%3A%2F%2Fr2.sizu.me%2Fusers%2F24466%2Favatar.png%3Fv%3D1704769301911&theme=user&username=yahooshiken";
+        let articles = sizu_response
+            .result
+            .data
+            .posts
+            .into_iter()
+            .map(|post| Article {
+                service_name: ServiceName::Sizu,
+                id: post.id.to_string(),
+                title: Some(post.title),
+                created_at: None,
+                image_url: Some(default_image_url.to_string()),
+                url: Some(format!("https://sizu.me/yahooshiken/posts/{}", post.slug)),
+                body: Some(from_read(post.excerptHtml.as_bytes(), 80)),
+                user: User {
+                    id: post.userId,
+                    user_name: Some("yahooshiken".to_string()),
+                    display_name: Some("yahooshiken".to_string()),
+                    avatar_url: Some(format!("https://r2.sizu.me/users/{}/avatar.png", post.userId)),
                 },
                 tags: Vec::new(),
             })

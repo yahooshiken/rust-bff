@@ -1,8 +1,7 @@
+use awc::Client;
 use actix_web::{
-    client::{Client, Connector},
     get, HttpRequest, HttpResponse, Responder,
 };
-use openssl::ssl::{SslConnector, SslMethod};
 use std::env;
 
 use crate::{
@@ -19,11 +18,9 @@ pub async fn get_token() -> String {
     let client_secret =
         env::var("SPOTIFY_CLIENT_SECRET").expect("SPOTIFY_CLIENT_SECRET is not defined");
 
-    let builder = SslConnector::builder(SslMethod::tls()).unwrap();
     let client = Client::builder()
-        .header("User-Agent", "localhost")
+        .add_default_header(("User-Agent", "localhost"))
         .basic_auth(client_id, Some(&client_secret))
-        .connector(Connector::new().ssl(builder.build()).finish())
         .finish();
 
     let get_token_request = GetTokenRequest {
