@@ -1,4 +1,4 @@
-FROM rust:1.76 as builder
+FROM rust:latest as builder
 
 RUN USER=root cargo new --bin rust-bff
 WORKDIR ./rust-bff
@@ -11,7 +11,7 @@ FROM debian:buster-slim
 ARG APP=/usr/src/app
 
 RUN apt-get update \
-  && apt-get install -y ca-certificates tzdata libssl-dev \
+  && apt-get install -y ca-certificates tzdata \
   && rm -rf /var/lib/apt/lists/*
 
 EXPOSE 8080
