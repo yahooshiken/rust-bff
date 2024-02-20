@@ -1,4 +1,4 @@
-FROM rust:bookworm as builder
+FROM rust:1.76 as builder
 
 RUN USER=root cargo new --bin rust-bff
 WORKDIR ./rust-bff
@@ -11,7 +11,7 @@ FROM debian:buster-slim
 ARG APP=/usr/src/app
 
 RUN apt-get update \
-  && apt-get install -y ca-certificates tzdata \
+  && apt-get install -y ca-certificates tzdata openssl libssl-dev \
   && rm -rf /var/lib/apt/lists/*
 
 EXPOSE 8080
