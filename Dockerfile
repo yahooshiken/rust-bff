@@ -1,4 +1,4 @@
-FROM rust:latest as builder
+FROM rust:bookworm as builder
 
 RUN USER=root cargo new --bin rust-bff
 WORKDIR ./rust-bff
