@@ -1,4 +1,4 @@
-FROM rust:1.76 as builder
+FROM rust:1.84 as builder
 
 RUN USER=root cargo new --bin rust-bff
 WORKDIR ./rust-bff
